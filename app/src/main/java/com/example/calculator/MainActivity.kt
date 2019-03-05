@@ -11,17 +11,20 @@ class MainActivity : AppCompatActivity() {
     private fun inputData(data:String) {
         if(data == "+" || data == "-" || data == "*" || data == "/" || data == "=") {
             if(screen.text != "0" && screen.text.substring(screen.text.length - 1, screen.text.length).toIntOrNull() != null) {
-                var oriText = screen.text
-                var text = "$oriText$data"
+                val oriText = screen.text
+                val text = "$oriText$data"
                 screen.text = text
+                if(finishCalcFlag == true) {
+                    finishCalcFlag = false
+                }
             }
         } else {
             if(screen.text == "0" || finishCalcFlag == true){
                 screen.text = data
                 finishCalcFlag = false
             } else {
-                var oriText = screen.text
-                var text = "$oriText$data"
+                val oriText = screen.text
+                val text = "$oriText$data"
                 screen.text = text
             }
         }
@@ -90,7 +93,7 @@ class MainActivity : AppCompatActivity() {
 
         deleteButton.setOnClickListener {
             if(screen.text != "0") {
-                var text = screen.text.substring(0, screen.text.length - 1)
+                val text = screen.text.substring(0, screen.text.length - 1)
                 if(text.isEmpty()) {
                     screen.text = "0"
                 } else{
@@ -104,21 +107,21 @@ class MainActivity : AppCompatActivity() {
             val numbers = mutableListOf<Int>()
             val operators = mutableListOf<String>()
 
-            var index = text.length;
+            var index = text.length
             for (i in text.length downTo 1){
-                var data = text.substring(i-1, i)
+                val data = text.substring(i-1, i)
                 if(data == "+" || data == "-" || data == "*" || data == "/"){
                     numbers.add(text.substring(i, index).toInt())
                     if(operators.size != 0 && (data == "+" || data == "-")){
                         for(j in operators.size downTo 1){
-                            var oper = operators[operators.size-1]
+                            val oper = operators[operators.size-1]
                             if(oper == "+" || oper == "-"){
-                                break;
+                                break
                             }
                             operators.removeAt(operators.size-1)
                             var sum = numbers[numbers.size-1]
                             numbers.removeAt(numbers.size-1)
-                            var n = numbers[numbers.size-1]
+                            val n = numbers[numbers.size-1]
                             numbers.removeAt(numbers.size-1)
                             when(oper){
                                 "*" -> sum *= n
@@ -133,12 +136,12 @@ class MainActivity : AppCompatActivity() {
             }
             numbers.add(text.substring(0, index).toInt())
             for(i in operators.size downTo 1) {
-                var oper = operators[operators.size - 1]
+                val oper = operators[operators.size - 1]
                 if (oper == "*" || oper == "/") {
                     operators.removeAt(operators.size - 1)
                     var sum = numbers[numbers.size - 1]
                     numbers.removeAt(numbers.size - 1)
-                    var n = numbers[numbers.size - 1]
+                    val n = numbers[numbers.size - 1]
                     numbers.removeAt(numbers.size - 1)
                     when (oper) {
                         "*" -> sum *= n
@@ -149,11 +152,11 @@ class MainActivity : AppCompatActivity() {
             }
 
             for(i in operators.size downTo 1){
-                var oper = operators[operators.size-1]
+                val oper = operators[operators.size-1]
                 operators.removeAt(operators.size-1)
                 var sum = numbers[numbers.size-1]
                 numbers.removeAt(numbers.size-1)
-                var n = numbers[numbers.size-1]
+                val n = numbers[numbers.size-1]
                 numbers.removeAt(numbers.size-1)
 
                 when(oper){
@@ -164,7 +167,7 @@ class MainActivity : AppCompatActivity() {
             }
             screen.text = numbers[numbers.size-1].toString()
             numbers.removeAt(numbers.size-1)
-            finishCalcFlag = true;
+            finishCalcFlag = true
         }
     }
 }
