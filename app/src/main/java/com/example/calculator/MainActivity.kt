@@ -7,9 +7,10 @@ import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
     private var finishCalcFlag = false
+    private var zeroFlag = false
 
     private fun inputData(data:String) {
-        if(data == "+" || data == "-" || data == "*" || data == "/" || data == "=") {
+        if(data == "+" || data == "-" || data == "*" || data == "/" || data == ".") {
             if(screen.text != "0" && screen.text.substring(screen.text.length - 1, screen.text.length).toIntOrNull() != null) {
                 val oriText = screen.text
                 val text = "$oriText$data"
@@ -89,6 +90,7 @@ class MainActivity : AppCompatActivity() {
 
         zeroButton.setOnClickListener {
             inputData("0")
+            zeroFlag = true
         }
 
         deleteButton.setOnClickListener {
@@ -96,6 +98,7 @@ class MainActivity : AppCompatActivity() {
                 val text = screen.text.substring(0, screen.text.length - 1)
                 if(text.isEmpty()) {
                     screen.text = "0"
+                    zeroFlag = false
                 } else{
                     screen.text = text
                 }
@@ -104,14 +107,14 @@ class MainActivity : AppCompatActivity() {
 
         resultButton.setOnClickListener {
             val text = screen.text
-            val numbers = mutableListOf<Int>()
+            val numbers = mutableListOf<Double>()
             val operators = mutableListOf<String>()
 
             var index = text.length
             for (i in text.length downTo 1){
                 val data = text.substring(i-1, i)
                 if(data == "+" || data == "-" || data == "*" || data == "/"){
-                    numbers.add(text.substring(i, index).toInt())
+                    numbers.add(text.substring(i, index).toDouble())
                     if(operators.size != 0 && (data == "+" || data == "-")){
                         for(j in operators.size downTo 1){
                             val oper = operators[operators.size-1]
@@ -134,7 +137,7 @@ class MainActivity : AppCompatActivity() {
                     index = i - 1
                 }
             }
-            numbers.add(text.substring(0, index).toInt())
+            numbers.add(text.substring(0, index).toDouble())
             for(i in operators.size downTo 1) {
                 val oper = operators[operators.size - 1]
                 if (oper == "*" || oper == "/") {
@@ -165,9 +168,24 @@ class MainActivity : AppCompatActivity() {
                 }
                 numbers.add(sum)
             }
-            screen.text = numbers[numbers.size-1].toString()
+            val doubleType = numbers[numbers.size-1]
+            val intType = numbers[numbers.size-1].toInt().toDouble()
+            if(doubleType != intType) {
+                screen.text = numbers[numbers.size - 1].toString()
+            }else{
+                screen.text = numbers[numbers.size - 1].toInt().toString()
+            }
             numbers.removeAt(numbers.size-1)
             finishCalcFlag = true
+        }
+
+        dotButton.setOnClickListener {
+            inputData(".")
+        }
+
+        cleanButton.setOnClickListener {
+            screen.text = "0"
+            zeroFlag = false
         }
     }
 }
